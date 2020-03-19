@@ -8,8 +8,8 @@ const jwt = require('jsonwebtoken')
 const { check, validationResult } = require('express-validator')
 
 // @route    GET /api/auth
-// @desc     Test route
-// @access   Public
+// @desc     Get Auth User
+// @access   Private
 route.get('/', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password')
@@ -21,6 +21,9 @@ route.get('/', auth, async (req, res) => {
 
 })
 
+// @route    POST /api/auth
+// @desc     Login Auth User
+// @access   Public
 route.post('/', [
     check('email', 'Please include a valid email')
         .isEmail(),
@@ -55,7 +58,7 @@ route.post('/', [
         jwt.sign(
             payload,
             config.get('jwtSecret'),
-            { expiresIn: 3600 },
+            { expiresIn: 360000 },
             (err, Token) => {
                 if (err) throw err
                 res.json({ token: Token })
